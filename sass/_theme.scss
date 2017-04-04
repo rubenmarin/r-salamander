@@ -1,0 +1,49 @@
+/* 
+#components
+*/
+
+.rm-video{
+	margin-bottom: 20px;
+}
+.playui-wrap{
+	position: relative;
+	display: inline-block;
+	&:before{
+		position: absolute;
+		width:100%;
+		top:0;
+		left:0;
+		height: 100%;
+		display: block;
+		background: rgba(#000000,0.25);
+		z-index: 2;
+		content:" ";
+		opacity: 1;
+		transition:all .5s;
+	}
+	&.is-playing{
+		&:before{
+			height: 0%;
+			opacity: 0;
+		}
+	}
+}
+
+/* 
+#front
+*/
+
+
+/* 
+#standard 
+*/
+
+
+/* 
+#customlanding 
+*/
+
+
+/* 
+#gallery
+*/

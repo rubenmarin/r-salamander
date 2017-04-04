@@ -1,0 +1,32 @@
+
+//theme info
+@import '_info.scss';
+
+//bootstrap
+@import '_bootstrap.scss';
+
+//bootstrap-customs
+@import '_bootstrap_extended.scss';
+
+//thanks B.A.
+@import '_rm_media_queries.scss';
+
+/* CSS Animations */
+@import '../vendor/animate/animate.scss';
+
+//standard WP styles
+@import '_wp.scss';
+
+//ALL THEME STYLES GO HERE
+/* 
+	START OF YOUR THEME
+*/
+
+@import '_theme.scss';
+
+/* 
+	END OF YOUR THEME
+*/
+
+//print + non-semantic -- goes at the end
+@import '_non-sem_print.scss';

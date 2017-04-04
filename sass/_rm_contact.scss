@@ -1,0 +1,251 @@
+$red: #E74C3C;
+$black : #000000;
+.responsive-map{
+	position: relative;
+	padding-bottom: 33.33333%;
+	padding-bottom: 45%;
+	padding-top: 0;
+	height: 0;
+	overflow: hidden;
+	margin-bottom: 25px;
+		iframe{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+}
+
+.location-single{
+	margin-top: 25px;
+	margin-bottom: 45px;
+	font-size: 1em;
+		// h3{
+		// 	font-size: 1em;
+		// 	line-height: 1.1em;
+		// 	font-weight: 600;
+		// }
+		a{
+			display: block;
+			text-decoration: none;
+			color: $black;
+				&:hover{
+					text-decoration: underline;
+				}
+		}
+		.location-phone{
+			font-weight: 600;
+		}
+		.location-directions{
+			text-decoration: underline;
+				&:hover{
+					text-decoration: none;
+				}
+		}
+}
+
+.office-hours{
+	ul{
+		margin: 10px 0;
+		padding: 0;
+			li{
+				padding: 0;
+				margin: 0;
+				display: block;
+					&:before{
+						content: '';
+						display: none;
+					}
+			}
+	}
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-3px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(4px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-8px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(8px, 0, 0);
+  }
+}
+
+.seaforms{
+	// font-size: 14px; //reset body fontsize so we can use em's
+	// line-height: 1.714em;
+		// h2{
+		// 	font-size: 2.000em;
+		// 	line-height: 1.714em;
+		// 	margin: 10px 0;
+		// 	padding-bottom: 0;
+		// }
+		input:invalid, textarea:invalid{
+			background: #fff;
+		}
+		.field-wrap:not(.type-text):not(.type-checkbox){
+			margin-bottom: 20px;
+		}
+		.error{
+			border: 1px solid $red!important;
+			outline: none !important;
+	    box-shadow: 0 0 10px $red!important;
+	    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+		  transform: translate3d(0, 0, 0);
+		  backface-visibility: hidden;
+		  perspective: 1000px;
+		}
+		span.error{
+			border: none!important;
+			box-shadow: none!important;
+			font-size: 0;
+			top: 4px;
+			right: 0;
+			position: absolute;
+			width: 30px;
+			height: 30px;
+			background-image: url(images/svg/error.svg);
+			background-size: 7px 20px;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+		.type-text{
+			> p{
+				font-weight: 600;
+				font-size: 1.286em;
+				line-height: 1.714em;
+				margin: 0;
+			}
+		}
+		.type-singlelinetext,
+		 .type-textarea{
+			position: relative;
+				input, textarea{
+					background: #fff;
+					box-shadow: 3px 3px 4px 0px rgba(0, 0, 0, 0.1) inset;
+					width: 100%;
+					border: 1px solid #c9c9c9;
+					font-size: 1em;
+					color: $black;
+					line-height: 1.714em;
+					padding: 7px 10px;
+				}
+				::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+					color:    #999999;
+					font-style: italic;
+				}
+				:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+				   color:    #999999;
+				   font-style: italic;
+				   opacity:  1;
+				}
+				::-moz-placeholder { /* Mozilla Firefox 19+ */
+				   color:    #999999;
+				   font-style: italic;
+				   opacity:  1;
+				}
+				:-ms-input-placeholder { /* Internet Explorer 10-11 */
+				   color:    #999999;
+				   font-style: italic;
+				}
+		}
+		.type-selectbox{
+			label{
+				display: none;
+			}
+			select{
+				display: block;
+				width: 100%;
+				background-color: #F9F9F9;
+				background-image: url(images/svg/select-arrow.svg);
+				background-position: right 18px center;
+				background-repeat: no-repeat;
+				background-size: 17px 11px;
+				padding: 7px 10px;
+				line-height: 1.714em;
+				border-radius: 0;
+				height: 38px;
+				border: 1px solid #c9c9c9;
+				-webkit-appearance: none;
+  			-webkit-border-radius: 0px;
+  			position: relative;
+  			color: $black;
+			}
+		}
+		.type-checkbox{
+			margin: 10px 0;
+				label{
+					display: inline-block;
+					vertical-align: top;
+					font-weight: 400;
+					margin-right: 7px;
+				}
+				label + input{
+
+				}
+				input + label{
+					margin-left: 7px;
+					margin-right: 0;
+				}
+		}
+		.type-checkboxgroup,
+		.type-radiobuttons{
+			> label{
+				font-size: 1.1em;
+				line-height: 1.714em;
+				font-weight: 600;
+			}
+			input[type="checkbox"],
+			input[type="radio"]{
+				margin: 0 7px 0 0;
+				height: 20px;
+				display: inline-block;
+				vertical-align: top;
+				position: relative;
+
+			}
+			> div > label{
+				line-height: 20px;
+				display: inline-block;
+				vertical-align: top;
+				font-size: 1em;
+				font-weight: 400;
+			}
+		}
+		.type-file{
+			> label{
+				font-size: 1.1em;
+				line-height: 1.714em;
+				font-weight: 600;
+			}
+			> div > label{
+				font-size: 1em;
+				font-weight: 400;
+			}
+		}
+		.type-cm_integration{
+			label{
+				display: inline-block;
+				font-weight: 400;
+				font-size: 1em;
+				line-height: 1.714em;
+			}
+			input{
+				display: inline-block;
+				margin-left: 7px;
+			}
+		}
+		.button{
+			width: 100%;
+			max-width: 150px;
+			margin: 10px 0;
+		}
+}

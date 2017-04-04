@@ -1,0 +1,46 @@
+// Media Query break points \ update to fit design
+$xs : 600px;
+$sm : 768px;
+$md : 992px;
+$lg : 1200px;
+
+$ipad-min: 768px;
+$ipad-max: 1024px;
+
+$ipadpro-min: 1024px;
+$ipadpro-max: 1366px;
+
+$stupid-small-size: 484px;
+
+$custom-nav-break: 1230px;
+// Media Query Mixin
+
+@mixin media($minwidth) {
+  @media only screen and (min-width: $minwidth) {
+    @content;
+  }
+}
+
+@mixin maxmedia($maxwidth) {
+  @media only screen and (max-width: $maxwidth) {
+    @content;
+  }
+}
+
+@mixin between-media($minwidth, $maxwidth) {
+  @media only screen and (min-width: $minwidth) and (max-width: $maxwidth) {
+    @content;
+  }
+}
+
+@mixin ipad($minwidth, $maxwidth) {
+	@media only screen and (min-device-width: $minwidth) and (max-device-width: $maxwidth) and (-webkit-min-device-pixel-ratio: 2) {
+		@content;
+	}
+}
+
+@mixin ipad-pro($minwidth, $maxwidth) {
+	@media only screen and (min-device-width: $minwidth) and (max-device-width: $maxwidth) and (-webkit-min-device-pixel-ratio: 2) {
+		@content;
+	}
+}
