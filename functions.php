@@ -8,7 +8,7 @@ if( !defined('TMPL_DIR_URI')):
 endif;
 
 /**
-*	rm-functions.php must be included before anything else
+*	inc/functions.php must be included before anything else
 **/
 include TMPL_DIR . '/inc/functions.php';
 
@@ -34,14 +34,14 @@ function __themesetup(){
 }
 add_action( 'after_setup_theme', '__themesetup' );
 
-function __themescripts(){
+function __themeassets(){
 	global $wp_scripts;
 	
 	/* CSS */
 	wp_register_style( 'fancybx' , TMPL_DIR_URI . '/js/libs/fancybox/jquery.fancybox.css' , '' , '1' );
 	wp_register_style( 'fontawesome' , TMPL_DIR_URI . '/vendor/fontawesome/css/font-awesome.css' , '' , '1' );
-	wp_register_style( 'rmtheme' , get_stylesheet_uri() , array('fancybx','fontawesome') , '1' );
-	wp_enqueue_style( 'rmtheme' );
+	wp_register_style( 'theme-style' , get_stylesheet_uri() , array('fancybx','fontawesome') , '1' );
+	wp_enqueue_style( 'theme-style' );
 
 	/* JAVASCRIPT */
 	wp_deregister_script('jquery');
@@ -50,7 +50,7 @@ function __themescripts(){
 	wp_register_script('theme-js', TMPL_DIR_URI . '/js/theme.js', array('jquery','modernizr'), '1.0', true );
 	wp_enqueue_script( 'theme-js');
 }
-add_action('wp_enqueue_scripts','__themescripts');
+add_action('wp_enqueue_scripts','__themeassets');
 
 
 
@@ -60,11 +60,11 @@ add_action('wp_enqueue_scripts','__themescripts');
 
 add_filter('inline/css' , function($tag = null ,$handle = null ,$src = null){
 	
-	if( !in_array($_SERVER['HTTP_HOST'] , array('rosemontdev.com','rubenito.co'))):
+	if( !in_array($_SERVER['HTTP_HOST'] , array('rubenito.co'))):
 		/* 
 			RUN ONLY ON LIVE (not dev)
 		*/
-		if($handle == 'rmtheme'):
+		if($handle == 'theme-style'):
 			$newtag = miniCSS::file( 'style.css' , array('echo'=>false));		
 		endif;
 		if($handle == 'fancybx'):
