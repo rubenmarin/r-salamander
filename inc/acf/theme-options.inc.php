@@ -8,7 +8,7 @@ class rm_theme_options{
 		        'title' 	 => 'Theme Options',
 		        'parent' 	 => 'themes.php',
 		        'capability' => 'manage_options',
-		        'post_id'	 => 'rm-theme-settings'
+		        'post_id'	 => 'theme-settings'
 		    ));
 		    
 		}
@@ -20,7 +20,7 @@ function get_mythemeoption($string = null , $prefix = null){
 	$parts = explode('/',$string);
 	$parts = array_filter($parts);
 	$parts = array_values($parts);
-	$prefix = ($prefix) ? $prefix : 'rm';
+	$prefix = ($prefix) ? $prefix : 'r';
 	if(function_exists('get_field') && count($parts) > 0):
 		$parts[0] = $prefix .'_'. $parts[0];
 		$options = get_field($parts[0], "{$prefix}-theme-settings");				
