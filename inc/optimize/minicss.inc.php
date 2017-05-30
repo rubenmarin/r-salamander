@@ -23,6 +23,9 @@ class miniCSS{
 
 		$OPTIONS['fileuri'] = (isset($OPTIONS['fileuri'])) ? $OPTIONS['fileuri']: get_template_directory_uri();
 		
+		$OPTIONS['alwaysrebuild'] = (!isset($OPTIONS['alwaysrebuild'])) ? false : true ;
+
+
 		$fileDirectory = rtrim( $fileDirectory , '/');
 
 		$miniDir = static::makeDir();
@@ -55,6 +58,10 @@ class miniCSS{
 				//echo $OPTIONS['minifilepath'];
 				if(!file_exists($OPTIONS['minifilepath']) || filemtime($filePath) > filemtime($OPTIONS['minifilepath'])):
 
+					$miniFilePath = static::writeFile( $filePath , $OPTIONS);
+
+				elseif($OPTIONS['alwaysrebuild'] == true):
+				
 					$miniFilePath = static::writeFile( $filePath , $OPTIONS);
 				
 				elseif(file_exists($OPTIONS['minifilepath'])):
@@ -100,13 +107,13 @@ class miniCSS{
 		
 		if(!isset($OPTIONS['default_searchreplace'])):
 			//run our default search/replace
-			$fileContents = preg_replace_callback('/url\((.*)\)/i', function($matches) use ($filePath){
+			$fileContents = preg_replace_callback('/url\((.*?)\)/i', function($matches) use ($filePath){
 				if(isset($matches[1])):
 					$matches[1] = trim($matches[1], '"');
 					$matches[1] = trim($matches[1], "'");
 
 						if(preg_match('/^.*.\.\//i' , $matches[1])):
-							
+
 							preg_match('/^.*.\.\//i' , $matches[1] , $tree);
 
 							$mainfile = preg_replace('/^.*.\.\//i' ,'',$matches[1]);
@@ -122,6 +129,7 @@ class miniCSS{
 							return 'url("'.$fileurl.'")';
 
 						elseif(preg_match('/^\.\//i' , $matches[1])):
+
 							$mainfile = preg_replace('/^\.\//i' ,'',$matches[1]);
 														
 							$path = realpath(dirname($filePath));
@@ -134,7 +142,7 @@ class miniCSS{
 							return 'url("'.$fileurl.'")';
 
 						else:
-						
+
 							$path = realpath(dirname($filePath));
 							$path = str_replace( ABSPATH , '' , $path );
 							$path = rtrim($path,'/') .'/'. ltrim($matches[1],'/');
@@ -172,18 +180,31 @@ class miniCSS{
 	}
 
 	public static function getFile($filePath){
-
+		//not used
 	}
 
 	public static function url($url = null , $OPTIONS = array()){
 		/*
 			need to build cache option
 		*/
-		$css = file_get_contents($url);
 		$output = '';
-		$inclineCss = "<style data-inlinecssurl=\"{$url}\">{$css}</style>\n";
+		$urlCleanName = preg_replace('/^https?:\/\/|www\.|\.|\/|\?|\=|\,|\+|\:/i','',$url);
+		$urlCleanName = strtolower($urlCleanName);
+		$OPTIONS['urlname'] = $urlCleanName;
+		
+		if(!isset($OPTIONS['cachetime'])):
+			$OPTIONS['cachetime'] = 60 * 60 * 6; //6 hrs
+		endif;
+		if(!isset($OPTIONS['ie-support'])):
+			$OPTIONS['ie-support'] = true;
+		endif;
+		if(!isset($OPTIONS['echo'])):
+			$OPTIONS['echo'] = true;
+		endif;
 
-		if(isset($OPTIONS['ie-support']) && $OPTIONS['ie-support'] == false ):
+		$inclineCss = static::urlWriteFile($url , $OPTIONS);
+		
+		if($OPTIONS['ie-support'] == false):
 			$output = $inclineCss;
 		else:
 			$output .= "<!--[if IE]>\n";
@@ -194,8 +215,40 @@ class miniCSS{
 			$output .= "<!--<![endif]-->";
 		endif;
 
-		if(isset($OPTIONS['echo']) && $OPTIONS['echo'] == false): return $output; else: echo $output; endif;
+		if($OPTIONS['echo'] == false): return $output; else: echo $output; endif;
 					
+	}
+
+	public static function urlWriteFile($url , $OPTIONS){
+		$miniDir = static::makeDir();
+		$urlCleanName = $OPTIONS['urlname'];
+		$filename = "{$miniDir}{$urlCleanName}.css";
+		$cachetime = $OPTIONS['cachetime'];
+		$filecontents = false;
+		$local = true;
+
+		if(is_writable($miniDir)):
+			//if file doesn't exist = create it
+			//if file exist but it's past its cache time = renew it
+			if(!file_exists($filename) || (file_exists($filename) && (time() - filemtime($filename)) > $cachetime) ):
+				$css = file_get_contents($url);//get url contents
+				$filetowrite = fopen($filename, "w");//start of write file
+				fwrite( $filetowrite ,  $css );//write contents to file	
+				fclose( $filetowrite );//close file
+			endif;
+		else:
+			$local = false;
+		endif;
+
+		if($local == true):
+			$filecontents = file_get_contents($filename);//from file
+		else:
+			// if no file was created because of permission issues then serve from url
+			$filecontents = file_get_contents($url);//from url
+		endif;
+		
+		$inclineCss = "<style data-inlinecssurl=\"{$urlCleanName}\">{$filecontents}</style>\n";
+		return $inclineCss;
 	}
 
 	public static function searchReplace( $file , $regexArr){

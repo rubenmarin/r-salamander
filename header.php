@@ -14,7 +14,10 @@
 	
 	<script> /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)?(document.getElementsByTagName("html")[0].className+=" is--device",/iPad/i.test(navigator.userAgent)&&(document.getElementsByTagName("html")[0].className+=" is--ipad")):document.getElementsByTagName("html")[0].className+=" not--device";</script>
 
-	<?php miniCSS::url( 'https://fonts.googleapis.com/css?family=Libre+Baskerville:400,400i'); ?>
+	<?php 
+		//this gets cached every 6 hrs (60*60*6)
+		miniCSS::url( 'https://fonts.googleapis.com/css?family=Libre+Baskerville:400,400i'); 
+	?>
 	
 	<?php wp_head(); ?>
 
@@ -24,3 +27,5 @@
 <body <?php body_class(); ?>>
 
 <div class="the-page">
+
+

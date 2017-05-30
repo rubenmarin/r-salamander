@@ -35,23 +35,27 @@ function __themesetup(){
 add_action( 'after_setup_theme', '__themesetup' );
 
 function __themeassets(){
-	global $wp_scripts;
+	
 	
 	/* CSS */
 	wp_register_style( 'fancybx' , TMPL_DIR_URI . '/js/libs/fancybox/jquery.fancybox.css' , '' , '1' );
-	wp_register_style( 'fontawesome' , TMPL_DIR_URI . '/vendor/fontawesome/css/font-awesome.css' , '' , '1' );
+	wp_register_style( 'fontawesome' , TMPL_DIR_URI . '/vendor/fontawesome/css/font-awesome.min.css' , '' , '1' );
 	wp_register_style( 'theme-style' , get_stylesheet_uri() , array('fancybx','fontawesome') , '1' );
 	wp_enqueue_style( 'theme-style' );
 
 	/* JAVASCRIPT */
-	wp_deregister_script('jquery');
+	wp_deregister_script('jquery');//unload
+	//load version we're working with
 	wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js", false, "2.1.3", true);
 	wp_register_script( 'modernizr', TMPL_DIR_URI . '/js/libs/modernizr.min.js', false, '2.8.3', false );
-	wp_register_script('theme-js', TMPL_DIR_URI . '/js/theme.js', array('jquery','modernizr'), '1.0', true );
+
+	wp_register_script('fancybox', TMPL_DIR_URI . '/js/libs/fancybox/jquery.fancybox.js', array(), '1.0', true );
+	wp_register_script('cycle2', TMPL_DIR_URI . '/js/libs/cycle2/jquery.cycle2.js', array(), '1.0', true );
+	wp_register_script('theme-js', TMPL_DIR_URI . '/js/theme.js', array('modernizr','jquery','fancybox','cycle2'), '1.0', true );
 	wp_enqueue_script( 'theme-js');
+
 }
 add_action('wp_enqueue_scripts','__themeassets');
-
 
 
 /************************* 
@@ -60,27 +64,33 @@ add_action('wp_enqueue_scripts','__themeassets');
 
 add_filter('inline/css' , function($tag = null ,$handle = null ,$src = null){
 	
-	if( !in_array($_SERVER['HTTP_HOST'] , array('rubenito.co'))):
+	if( !in_array($_SERVER['HTTP_HOST'] , array('rubenitos.co'))):
 		/* 
 			RUN ONLY ON LIVE (not dev)
 		*/
-		if($handle == 'theme-style'):
-			$newtag = miniCSS::file( 'style.css' , array('echo'=>false));		
+		
+		$templatepath = get_template_directory_uri();
+
+		if(in_array($handle , array('theme-style','fancybx','fontawesome'))):
+			
+			$templatepath2 = preg_replace('/https?:\/\//i' , '' , $templatepath);
+			$src2 = preg_replace('/https?:\/\/|\?(.*)/i','',$src);
+			$src2 = str_replace("$templatepath2", '' , $src2 );
+			//
+			$newtag = miniCSS::file( $src2 , array('echo'=>false));
+
 		endif;
-		if($handle == 'fancybx'):
-			$newtag = miniCSS::file( '/js/libs/fancybox/jquery.fancybox.css' , array('echo'=>false));	
-		endif;
-		if($handle == 'fontawesome'):
-			$newtag = miniCSS::file( '/vendor/fontawesome/css/font-awesome.css' , array(
-				'echo'=>false,
-				'default_searchreplace' => false,
-				'regex' => array(
-				array(
-					'search' => '/\.\./i',
-					'replacewith' => get_template_directory_uri() . '/fonts/fontawesome'
-				))
-			));	
-		endif;
+
+		// if($handle == 'theme-style'):
+		// 	$newtag = miniCSS::file( 'style.css' , array('echo'=>false));		
+		// endif;
+		// if($handle == 'fancybx'):
+		// 	$newtag = miniCSS::file( '/js/libs/fancybox/jquery.fancybox.css' , array('echo'=>false));	
+		// endif;
+		// if($handle == 'fontawesome'):
+		// 	$newtag = miniCSS::file( '/vendor/fontawesome/css/font-awesome.css' , array('echo'=>false));		
+		// endif;
+
 		if(!empty($newtag)):
 			return $newtag;
 		endif;
