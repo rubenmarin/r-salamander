@@ -227,11 +227,13 @@ class miniCSS{
 		$filecontents = false;
 		$local = true;
 
+		
+
 		if(is_writable($miniDir)):
 			//if file doesn't exist = create it
 			//if file exist but it's past its cache time = renew it
 			if(!file_exists($filename) || (file_exists($filename) && (time() - filemtime($filename)) > $cachetime) ):
-				$css = file_get_contents($url);//get url contents
+				$css = static::file_get_contents($url);//get url contents
 				$filetowrite = fopen($filename, "w");//start of write file
 				fwrite( $filetowrite ,  $css );//write contents to file	
 				fclose( $filetowrite );//close file
@@ -244,7 +246,7 @@ class miniCSS{
 			$filecontents = file_get_contents($filename);//from file
 		else:
 			// if no file was created because of permission issues then serve from url
-			$filecontents = file_get_contents($url);//from url
+			$filecontents = static::file_get_contents($url);//from url
 		endif;
 		
 		$inclineCss = "<style data-inlinecssurl=\"{$urlCleanName}\">{$filecontents}</style>\n";
@@ -256,6 +258,16 @@ class miniCSS{
 			$file = preg_replace( $regexSetting['search'], $regexSetting['replacewith'] , $file); 
 		endforeach;
 		return $file;
+	}
+
+	public static function file_get_contents($url){
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_HEADER, false);
+		$data = curl_exec($curl);
+		curl_close($curl);
+		return $data;
 	}
 
 	public static function makeDir(){
